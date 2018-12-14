@@ -41,18 +41,18 @@ class WxController
     public function WxLogin(Request $req){
         $code = $req->json('code');
 
-//        if(!$code){
-//            outputToJson(ERROR, '预授权错误');
-//        }
-//        $WxAppObj   = new WxAppController();
-//        $res       = $WxAppObj->jsCode2Session($code);
-//        $openid     = $res['openid'];
-//        $sessionKey = $res['session_key'];
+        if(!$code){
+            outputToJson(ERROR, '预授权错误');
+        }
+        $WxAppObj   = new WxAppController();
+        $res       = $WxAppObj->jsCode2Session($code);
+        $openid     = $res['openid'];
+        $sessionKey = $res['session_key'];
 
-//        $data['sessionCode'] = $sessionKey;
-        $data['sessionCode'] = '1111';
-        $data['isBind']      = 1;
-        $data['mobileNo']    = '13833333333';
+        $data['sessionCode']    = $sessionKey;
+        $data['openid']         = $openid;
+        $data['isBind']         = 1;
+        $data['mobileNo']       = '13833333333';
         WxOutPut($data);
     }
 
