@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::namespace('Api')->group(function(){
+    Route::any('interface1/Member/WxLogin', 'WxController@WxLogin');
+    Route::any('/publicmina/Handler/RedPacketHandler.ashx', 'WxController@RedPacketHandler');
 });
