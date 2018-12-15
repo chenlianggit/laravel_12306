@@ -49,7 +49,7 @@ class WxController
 
         $openid     = $res['openid'] ?? '';
         $sessionKey = $res['session_key'] ?? '';
-        if($openid){
+        if(!$openid){
             outputToJson(ERROR, '登陆失败',$res);
         }
         $data['sessionCode']    = $sessionKey;
