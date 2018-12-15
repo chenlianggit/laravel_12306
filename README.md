@@ -45,6 +45,6 @@
 
 
 # 小程序界面
-![](https://ws1.sinaimg.cn/large/006Ziquvly1fy3avosla1j30760763zh.jpg)
+![](https://ws1.sinaimg.cn/large/006Ziquvly1fy6pwhy0dhj30by0by76h.jpg)
 
 
