@@ -46,9 +46,12 @@ class WxController
         }
         $WxAppObj   = new WxAppController();
         $res       = $WxAppObj->jsCode2Session($code);
-        $openid     = $res['openid'];
-        $sessionKey = $res['session_key'];
 
+        $openid     = $res['openid'] ?? '';
+        $sessionKey = $res['session_key'] ?? '';
+        if($openid){
+            outputToJson(ERROR, '登陆失败',$res);
+        }
         $data['sessionCode']    = $sessionKey;
         $data['openid']         = $openid;
         $data['isBind']         = 1;
