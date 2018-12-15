@@ -56,6 +56,7 @@ class WxController
         $data['openid']         = $openid;
         $data['isBind']         = 1;
         $data['mobileNo']       = '13833333333';
+        $data['uid']            = rand(10000,99999);
         WxOutPut($data);
     }
 
