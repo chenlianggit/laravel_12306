@@ -145,7 +145,7 @@ class WxController
         $formid         = get('formid', 'string', '');
 
 
-        if (!$$sessionCode || !$formid) {
+        if (!$sessionCode || !$formid) {
             outputToJson(ERROR, '请上传完整参数');
         }
         $formid = trim($formid);
