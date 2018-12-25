@@ -114,3 +114,21 @@ function mtimeDateTime(){
     $datetime = date("Y-m-d H:i:s", $timestamp) . '.' . $milliseconds;
     return $datetime;
 }
+
+
+function send_post( $url, $post_data ) {
+    $options = array(
+        'http' => array(
+            'method'  => 'POST',
+            'header'  => 'Content-type:application/json',
+            //header 需要设置为 JSON
+            'content' => json_encode($post_data),
+            'timeout' => 60
+            //超时时间
+        )
+    );
+    $context = stream_context_create( $options );
+    $result = file_get_contents( $url, false, $context );
+
+    return $result;
+}
