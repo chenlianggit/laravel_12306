@@ -25,12 +25,16 @@ class LoginController
         }
         $openid = WxController::getOpenidBy3rdSession($sessionCode);
 
-        $userObj = new User12306();
-        $userObj->openid = $openid;
-        $userObj->username = $username;
-        $userObj->pwd = $pwd;
-        $userObj->phone = $phone;
-        $userObj->save();
+
+        User12306::updateOrCreate(
+            ['username' => $username],
+            [
+                'openid'    => $openid,
+                'username'  => $username,
+                'pwd'       => $pwd,
+                'phone'     => $phone
+            ]
+        );
 
         outputToJson(OK,'success');
     }
