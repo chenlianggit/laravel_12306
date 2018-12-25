@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api;
 
 
 use App\Http\Controllers\Wechart\WxAppController;
+use App\Models\WxFormId;
 use Illuminate\Http\Request;
 
 class WxController
@@ -94,6 +95,40 @@ class WxController
         $memberCouponList[1]['redPackageCode'] = '1208873V2T3TTTWVHT43';
         $memberCouponList[2]['redPackageCode'] = '949411VTTT44OD94YTXF';
         return $data=['memberCouponList' => $memberCouponList];
+    }
+
+
+
+    /**
+     * 上传Formid
+     */
+    public function postFormid()
+    {
+        $uid    = get('uid', 'int', 0);
+        $openid = get('openid', 'string', '');
+        $formid = get('formid', 'string', '');
+
+
+        if (!$openid || !$formid) {
+            outputToJson(ERROR, '请上传完整参数');
+        }
+        $formid = trim($formid);
+        if (preg_match("/\s/", $formid)) {
+            outputToJson(ERROR, '请上传有效的formid');
+        }
+
+        $res = WxFormId::where('formid', $formid)->first();
+        if ($res) {
+            outputToJson(ERROR, 'formid请勿重复提交');
+        }
+        $formidObj = new WxFormId();
+        $formidObj->uid = $uid;
+        $formidObj->openid = $openid;
+        $formidObj->formid = $formid;
+        $formidObj->del = 0;
+        $formidObj->create_time = time();
+        $formidObj->save();
+        outputToJson(OK, 'success');
     }
 
 

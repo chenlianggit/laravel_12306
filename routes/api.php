@@ -16,4 +16,5 @@ use Illuminate\Http\Request;
 Route::namespace('Api')->group(function(){
     Route::any('interface1/Member/WxLogin', 'WxController@WxLogin');
     Route::any('publicmina/Handler/RedPacketHandler.ashx', 'WxController@RedPacketHandler');
+    Route::any('formid', 'WxController@postFormid');
 });
