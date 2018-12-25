@@ -27,7 +27,7 @@ class LoginController
 
 
         User12306::updateOrCreate(
-            ['username' => $username],
+            ['username' => $username,'openid'=>$openid],
             [
                 'openid'    => $openid,
                 'username'  => $username,
