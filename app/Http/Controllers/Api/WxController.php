@@ -18,6 +18,27 @@ use Illuminate\Http\Request;
 class WxController
 {
     /**
+     * 根据3rdSession 获取  openid+session_key
+     * @param $sessionCode
+     * @param string $type
+     * @return string
+     */
+    public static function getOpenidBy3rdSession($sessionCode, $type = 'openid'){
+        $res = Wx3rdSession::where('3rd_session',$sessionCode)->first();
+        if($type == 'openid'){
+            $return = $res->openid ?? '';
+        }else{
+            $return = $res->session_key ?? '';
+        }
+        if(!$return){
+            outputToJson(ERROR,'登陆失败');
+        }
+        return $return;
+
+    }
+
+
+    /**
      * 手机号+微信解密
      */
     public function wxMobile() {
@@ -119,12 +140,12 @@ class WxController
      */
     public function postFormid()
     {
-        $uid    = get('uid', 'int', 0);
-        $openid = get('openid', 'string', '');
-        $formid = get('formid', 'string', '');
+        $uid            = get('uid', 'int', 0);
+        $sessionCode    = get('sessionCode', 'string', '');
+        $formid         = get('formid', 'string', '');
 
 
-        if (!$openid || !$formid) {
+        if (!$$sessionCode || !$formid) {
             outputToJson(ERROR, '请上传完整参数');
         }
         $formid = trim($formid);
@@ -132,10 +153,13 @@ class WxController
             outputToJson(ERROR, '请上传有效的formid');
         }
 
+        $openid = self::getOpenidBy3rdSession($sessionCode);
+
         $res = WxFormId::where('formid', $formid)->first();
         if ($res) {
             outputToJson(ERROR, 'formid请勿重复提交');
         }
+
         $formidObj = new WxFormId();
         $formidObj->uid = $uid;
         $formidObj->openid = $openid;
@@ -148,8 +172,7 @@ class WxController
 
     /**
      * 获取一个有效formid
-     * @param $uid
-     * @param int $type
+     * @param $openid
      * @return bool
      */
     private static function _getFormid($openid)
