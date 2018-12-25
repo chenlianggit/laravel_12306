@@ -25,16 +25,17 @@ class LoginController
         }
         $openid = WxController::getOpenidBy3rdSession($sessionCode);
 
-        $res = User12306::where(['username' => $username,'openid'=>$openid])->first();
-        if(!$res){
-            $res = new User12306();
-        }
-        $res->openid = $openid;
-        $res->username = $username;
-        $res->pwd = $pwd;
-        $res->phone = $phone;
-        $res->save();
-        
+
+        User12306::updateOrCreate(
+            ['username' => $username,'openid'=>$openid],
+            [
+                'openid'    => $openid,
+                'username'  => $username,
+                'pwd'       => $pwd,
+                'phone'     => $phone
+            ]
+        );
+
         outputToJson(OK,'success');
     }
 }
