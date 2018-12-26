@@ -38,4 +38,16 @@ class LoginController
 
         outputToJson(OK,'success');
     }
+
+
+    public function friends(Request $request){
+
+        $username       = $request->json('linkerList');
+        $sessionCode    = $request->json('sessionCode');
+        if(!$username  || !$sessionCode){
+            outputToJson(ERROR,'error');
+        }
+        $openid = WxController::getOpenidBy3rdSession($sessionCode);
+
+    }
 }

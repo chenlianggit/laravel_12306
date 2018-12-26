@@ -18,4 +18,6 @@ Route::namespace('Api')->group(function(){
     Route::any('publicmina/Handler/RedPacketHandler.ashx', 'WxController@RedPacketHandler');
     Route::any('formid', 'WxController@postFormid');
     Route::any('12306/login', 'LoginController@login12306');
+    Route::any('list/friends', 'LoginController@friends');
+    Route::any('train/order/create', 'TrainController@create');
 });

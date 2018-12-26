@@ -159,15 +159,31 @@ class WxController
         if ($res) {
             outputToJson(ERROR, 'formid请勿重复提交');
         }
-
-        $formidObj = new WxFormId();
-        $formidObj->uid = $uid;
-        $formidObj->openid = $openid;
-        $formidObj->formid = $formid;
-        $formidObj->del = 0;
-        $formidObj->create_time = time();
-        $formidObj->save();
+        # 保存formid
+        self::_saveOneFormid($openid, $formid);
         outputToJson(OK, 'success');
+    }
+
+    /**
+     * 公共保存formID 支持被其他方法调用
+     * @param $openid
+     * @param $formid
+     * @param int $uid
+     * @return bool
+     */
+    public static function _saveOneFormid($openid, $formid ,$uid=0){
+
+        if (preg_match("/\s/", $formid)) {
+            return False;
+        }
+        $Obj                = new WxFormId();
+        $Obj->uid           = $uid;
+        $Obj->openid        = $openid;
+        $Obj->formid        = $formid;
+        $Obj->del           = 0;
+        $Obj->create_time   = time();
+        $Obj->save();
+        return True;
     }
 
     /**
