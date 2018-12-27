@@ -29,7 +29,7 @@ class Create extends Command
         $data = [
             "username"  => $train->username,
             "password"  => $train->pwd,
-            "date"      => $train->username,
+            "date"      => $train->train_date,
             "start"     => $train->start_station,
             "end"       => $train->to_station,
             "code"      => $train->train_no,
