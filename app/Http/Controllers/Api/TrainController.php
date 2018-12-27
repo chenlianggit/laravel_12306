@@ -53,7 +53,7 @@ class TrainController
         #储存formId
         WxController::_saveOneFormid($openid, $formId);
 
-        $seat = config('dict.weixin');
+        $seat = config('dict.seat');
         $Obj = new Train();
         $Obj->openid        = $openid;
         $Obj->username      = $accountNo;
@@ -106,7 +106,7 @@ class TrainController
             $v['packageName'] = '快速出票';
             $v['packagePrice'] = '2.0';
         }
-        $seat = config('dict.weixin');
+        $seat = config('dict.seat');
 
         $data = [
             "cancelReason"      => "一天只能取消3次订单,取消订单超过3次会影响出票速度。",

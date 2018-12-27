@@ -37,7 +37,7 @@ class TrainPython implements ShouldQueue
         $train->python_type = 1;
         $train->save();
 
-        $seat = config('dict.weixin');
+        $seat = config('dict.seat');
 
         $data = [
             "username"  => $train->username,
