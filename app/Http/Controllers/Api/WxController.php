@@ -32,7 +32,7 @@ class WxController
         }
         if(!$return){
             if($res == 1){
-                WxOutPut();
+                WxOutPutBody(WXERROR,'请杀掉程序,重新进入');
             }
             outputToJson(ERROR,'登陆失败');
         }

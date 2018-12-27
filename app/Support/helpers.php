@@ -9,6 +9,8 @@
 const OK    = 200;
 const ERROR = 0;
 
+const WXERROR = 4001;# 错误
+
 function array2object($arr)
 {
     $json = json_encode($arr);
@@ -99,6 +101,36 @@ function WxOutPut($data = []){
     ];
     if($data){
         $msg['response']['body'] = array_merge($msg['response']['body'],$data);
+    }
+
+    $msg = json_encode($msg);
+
+    echo $msg;
+    exit();
+}
+
+function WxOutPutBody($code=0, $msg='', $data = []){
+    header("Content-type: application/json; charset=utf-8");
+    $msg = [
+        'header'=>[
+            'rspType' => '0',
+            'rspCode' => $code,
+            'rspDesc' => $msg,
+            'serverTime' => mtimeDateTime(),
+        ],
+        'body'  => [
+            'isSubscribe'       => '0',
+            'isSubscribeTips'   => '0',
+            'isSuccess'         => '1',
+            'description'       => '执行成功',
+            'code'              => '0',
+            'rspType'           => '0',
+            'mileSeconds'       => '0',
+            'verifyReturn'      => false,
+        ],
+    ];
+    if($data){
+        $msg['body'] = array_merge($msg['body'],$data);
     }
 
     $msg = json_encode($msg);

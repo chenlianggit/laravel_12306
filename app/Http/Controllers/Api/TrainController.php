@@ -28,22 +28,21 @@ class TrainController
         $passengersList = $arr['passengersList'] ?? [];   # 乘车人
 
         if(!$ticketItem || !$sessionCode || !$passengersList || !$accountNo){
-            outputToJson(ERROR,'error');
+            WxOutPutBody(WXERROR,'缺少购票信息,请重新填写');
+
         }
         if($ticketItem['trainDate'] < date('Y-m-d')){
-//            outputToJson(ERROR,'购票时间接近开车时间,请重新选择');
-            WxOutPut();
+            WxOutPutBody(WXERROR,'购票时间接近开车时间,请重新选择');
         }
         $openid     = WxController::getOpenidBy3rdSession($sessionCode,1);
         $User12306  = User12306::where('username',$accountNo)->first();
         if(!($User12306->pwd ?? '')){
-//            outputToJson(ERROR,'请重新登陆12306');
-            WxOutPut();
+            WxOutPutBody(WXERROR,'请重新登陆12306');
+
         }
         $res = Train::where(['openid'=>$openid,'username'=>$accountNo,'train_no'=>$ticketItem['trainNo'],'train_date'=>$ticketItem['trainDate'],'python_type'=>0])->first();
         if($res){
-//            outputToJson(ERROR,'同一时间，同一辆车，不能多次创建');
-            WxOutPut();
+            WxOutPutBody(WXERROR,'同一时间，同一辆车，不能多次创建');
         }
 
         #储存formId
@@ -71,8 +70,6 @@ class TrainController
             "totalAmount"=> "89.0",
             "purchaseModel"=> "1"
         ];
-        WxOutPut($data);
-//        outputToJson(OK,'success',$id);
-
+        WxOutPutBody(0,'',$data);
     }
 }
