@@ -190,6 +190,6 @@ function ycIdCard($str){
     if(!$str){
         return '';
     }
-    $resstr = substr_replace($str,'****',3,12);
+    $resstr = substr_replace($str,'************',3,12);
     return $resstr;
 }

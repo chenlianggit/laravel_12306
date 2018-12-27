@@ -30,6 +30,7 @@ class TrainController
         $phone          = $arr['memberPhone'] ?? '';
         $ticketItem     = $arr['ticketItem'] ?? [];   # 乘车信息
         $passengersList = $arr['passengersList'] ?? [];   # 乘车人
+        $seatType       = $arr['seatType'];
 
         if(!$ticketItem || !$sessionCode || !$passengersList || !$accountNo){
             WxOutPutBody(WXERROR,'缺少购票信息,请重新填写');
@@ -52,11 +53,14 @@ class TrainController
         #储存formId
         WxController::_saveOneFormid($openid, $formId);
 
+        $seat = config('dict.weixin');
         $Obj = new Train();
         $Obj->openid        = $openid;
         $Obj->username      = $accountNo;
         $Obj->pwd           = $User12306->pwd;
         $Obj->phone         = $phone;
+        $Obj->seat_type     = $seatType;
+        $Obj->seat_name     = $seat[$seatType]['name'];
         $Obj->start_station = $ticketItem['fromStationName'];
         $Obj->to_station    = $ticketItem['toStationName'];
         $Obj->train_date    = $ticketItem['trainDate'];
@@ -102,37 +106,39 @@ class TrainController
             $v['packageName'] = '快速出票';
             $v['packagePrice'] = '2.0';
         }
+        $seat = config('dict.weixin');
+
         $data = [
             "cancelReason"      => "一天只能取消3次订单,取消订单超过3次会影响出票速度。",
             "fromDate"          => $train->train_date,
             "wxFromDate"        => "1月15日 周六",
-            "fromPassType"      => "1",
+            "fromPassType"      => 1,
             "fromStationCode"   => "from",
             "fromStationName"   => $train->start_station,
             "fromTime"          => $train->FromTime,
-            "insuranceAmount"   => "4.0",
+            "insuranceAmount"   => 4.0,
             "memberId"          => "13907982",
-            "occupySeatState"   => "0",
-            "orderState"        => "2",
+            "occupySeatState"   => 0,
+            "orderState"        => 2,
             "orderStateName"    => "排队中",
-            "orderType"         => "7",
+            "orderType"         => 7,
             "outTicketFailMsg"  => "正在为您抢座,请耐心等待……",
             "passengerList"     => $passengerList,
             "payExpireDate"     => "1900-01-01 00:20:00.000",
-            "purchaseModel"     => "1",
-            "seatName"          => "硬座",
-            "seatType"          => "10",
-            "serialId"          => "NTO04181214195525937065506",
+            "purchaseModel"     => 1,
+            "seatName"          => $train->seat_name,
+            "seatType"          => $train->seat_type,
+            "serialId"          => $train->id,
             "serverTime"        => date('Y-m-d H:s:i'),
             "showButtons"       => [
-                "ifCanCancel"   =>"0",
-                "ifCanPay"      =>"0",
-                "ifContinueBook"=>"0",
-                "ifRefresh"     =>"0",
-                "ifBookReturn"  =>"0",
-                "ifBookAgain"   =>"0",
-                "ifContinueGrab"=>"0",
-                "ifGrabProcess" =>"0",
+                "ifCanCancel"   => "0",
+                "ifCanPay"      => "0",
+                "ifContinueBook"=> "0",
+                "ifRefresh"     => "0",
+                "ifBookReturn"  => "0",
+                "ifBookAgain"   => "0",
+                "ifContinueGrab"=> "0",
+                "ifGrabProcess" => "0",
                 "ifCanCancelGrab"=>"0"
             ],
             "ticketCount"       => count($passengerList).".0",

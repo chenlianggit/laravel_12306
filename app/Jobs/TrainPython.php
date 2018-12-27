@@ -37,6 +37,8 @@ class TrainPython implements ShouldQueue
         $train->python_type = 1;
         $train->save();
 
+        $seat = config('dict.weixin');
+
         $data = [
             "username"  => $train->username,
             "password"  => $train->pwd,
@@ -44,6 +46,7 @@ class TrainPython implements ShouldQueue
             "start"     => $train->start_station,
             "end"       => $train->to_station,
             "code"      => $train->train_no,
+            "seatType"  => $seat[$train->seat_type]['train'] ?? '',
         ];
 
         $curl = new Curl();
