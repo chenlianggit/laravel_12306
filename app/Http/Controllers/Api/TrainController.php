@@ -104,7 +104,7 @@ class TrainController
             $v['idCard'] = ycIdCard($v['idCard']);
             $v['ticketStateName'] = '未出票';
             $v['packageName'] = '快速出票';
-            $v['packagePrice'] = '2.0';
+            $v['packagePrice'] = 2.0;
         }
         $seat = config('dict.seat');
 
@@ -117,7 +117,7 @@ class TrainController
             "fromStationName"   => $train->start_station,
             "fromTime"          => $train->FromTime,
             "insuranceAmount"   => 4.0,
-            "memberId"          => "13907982",
+            "memberId"          => 13907982,
             "occupySeatState"   => 0,
             "orderState"        => 2,
             "orderStateName"    => "排队中",
@@ -142,22 +142,22 @@ class TrainController
                 "ifCanCancelGrab"=>"0"
             ],
             "ticketCount"       => count($passengerList).".0",
-            "ticketModel"       => "1",
+            "ticketModel"       => 1,
             "ticketNo"          => "",
-            "ticketPrice"       => "43.5",
+            "ticketPrice"       => 43.5,
             "toDate"            => $train->train_date,
             "wxToDate"          => "1月15日 周六",
             "toTime"            => "06:55",
-            "toPassType"        => "1",
+            "toPassType"        => 1,
             "toStationCode"     => "to",
             "toStationName"     => $train->to_station,
-            "totalAmount"       => "89.0",
+            "totalAmount"       => 89.0,
             "trainNo"           => $train->train_no,
-            "isNight"           => "0",
+            "isNight"           => 0,
             "createTime"        => $train->created_at,
-            "isBuyOneyuanFree"  => "0",
-            "oneyuanFreeCount"  => "0",
-            "couponAmount"      => "0",
+            "isBuyOneyuanFree"  => 0,
+            "oneyuanFreeCount"  => 0,
+            "couponAmount"      => 0,
             "moId"              => $openid,
             "orderId"           => $train->id,
             "encryptedOrderId"  => $train->id
