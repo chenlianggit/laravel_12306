@@ -23,7 +23,7 @@ class WxController
      * @param string $type
      * @return string
      */
-    public static function getOpenidBy3rdSession($sessionCode, $type = 'openid', $res = 0){
+    public static function getOpenidBy3rdSession($sessionCode, $type = 'openid', $status = 0){
         $res = Wx3rdSession::where('3rd_session',$sessionCode)->first();
         if($type == 'openid'){
             $return = $res->openid ?? '';
@@ -31,7 +31,7 @@ class WxController
             $return = $res->session_key ?? '';
         }
         if(!$return){
-            if($res == 1){
+            if($status == 1){
                 WxOutPutBody(WXERROR,'请杀掉程序,重新进入');
             }
             outputToJson(ERROR,'登陆失败');
