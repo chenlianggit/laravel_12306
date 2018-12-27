@@ -24,6 +24,10 @@ class TrainController
      * @param Request $request
      */
     public function create(Request $request){
+        $noeHour = date('H');
+        if($noeHour >= 23 || $noeHour <= 8 ){
+            WxOutPutBody(WXERROR, '该时段已停止网络预订');
+        }
         $arr = $request->json()->all();
         $accountNo      = $arr['accountNo'] ?? '';
         $formId         = $arr['formId'] ?? '';
@@ -67,6 +71,7 @@ class TrainController
         $Obj->train_date    = $ticketItem['trainDate'];
         $Obj->train_no      = $ticketItem['trainNo'];
         $Obj->FromTime      = $ticketItem['FromTime'];
+        $Obj->type          = 7;
         $Obj->passengers    = json_encode($passengersList,JSON_UNESCAPED_UNICODE);
         $Obj->save();
         $id = $Obj->id;
@@ -118,6 +123,18 @@ class TrainController
             $v["packageName"]       = "快速出票";
             $v["packagePrice"]      = "2.0";
             $v["insuranceId"]       = "121";
+
+            $v['refundProcess']     = 0; # 1查看退款, 0无
+            $v['changeButton']      = [
+                'isVisiable'    => 0, # 1改签, 0无
+                'isEnable'      => 0  # 1改签, 0无
+            ];
+            $v['refundButton']      = [
+                'isVisiable'    => 0, # 1退票, 0无
+                'isEnable'      => 0  # 1退票, 0无
+            ];
+
+
         }
         $seat = config('dict.seat');
 
@@ -132,31 +149,33 @@ class TrainController
             "insuranceAmount"   => 4.0,
             "memberId"          => 13907982,
             "occupySeatState"   => 0,
-            "orderState"        => 2,
+            "orderState"        => 2,   # 0 抢到, 2进度条 4 5 7 显示msg 15无msg
             "orderStateName"    => "排队中",
-            "orderType"         => 7,
-            "outTicketFailMsg"  => "正在为您抢座,请耐心等待……",
+            "orderType"         => $train->type,
+//            "outTicketFailMsg"  => "正在为您抢座,请耐心等待……", # msg上面横条显示
+            "outTicketFailMsg"  => "一天已经超过三次", # msg上面横条显示
             "passengerList"     => $passengerList,
+            'balancePrice'      => 0, # orderState=15 &&balancePrice
             "payExpireDate"     => "1900-01-01 00:20:00.000",
-            "purchaseModel"     => 1,
+            "purchaseModel"     => 1, # 0 座位已成功锁定
             "seatName"          => $train->seat_name,
             "seatType"          => $train->seat_type,
             "serialId"          => $train->id,
             "serverTime"        => date('Y-m-d H:s:i'),
             "showButtons"       => [
-                "ifCanCancel"   => "0",
-                "ifCanPay"      => "0",
-                "ifContinueBook"=> "0",
-                "ifRefresh"     => "0",
+                "ifCanCancel"   => "0",#取消订单
+                "ifCanPay"      => "0",#立即支付
+                "ifContinueBook"=> "0",#继续预订 返回首页
+                "ifRefresh"     => "0",#刷新出票结果 =手动请求detail
                 "ifBookReturn"  => "0",
                 "ifBookAgain"   => "0",
-                "ifContinueGrab"=> "0",
+                "ifContinueGrab"=> "0",#再抢一次 = 返回首页
                 "ifGrabProcess" => "0",
-                "ifCanCancelGrab"=>"0"
+                "ifCanCancelGrab"=>"0",#取消抢票
             ],
             "ticketCount"       => count($passengerList).".0",
             "ticketModel"       => 1,
-            "ticketNo"          => "",
+            "ticketNo"          => "", #取号码 && orderState !=0 !=8
             "ticketPrice"       => 43.5,
             "toDate"            => $train->train_date,
             "wxToDate"          => "1月15日 周六",
@@ -166,14 +185,15 @@ class TrainController
             "toStationName"     => $train->to_station,
             "totalAmount"       => 89.0,
             "trainNo"           => $train->train_no,
-            "isNight"           => 0,
+            "isNight"           => 0, #晚上
             "createTime"        => Carbon ::parse($train->created_at)->format('Y-m-d H:i:s'),
             "isBuyOneyuanFree"  => 0,
             "oneyuanFreeCount"  => 0,
             "couponAmount"      => 0,
             "moId"              => $openid,
             "orderId"           => $train->id,
-            "encryptedOrderId"  => $train->id
+            "encryptedOrderId"  => $train->id,
+
         ];
 
         WxOutPutBody(0,'',$data);
