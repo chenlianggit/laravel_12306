@@ -47,6 +47,7 @@ class TrainPython implements ShouldQueue
             "end"       => $train->to_station,
             "code"      => $train->train_no,
             "seatType"  => $seat[$train->seat_type]['train'] ?? '',
+            "seatName"  => $train->seat_name ?? '',
         ];
 
         $curl = new Curl();
