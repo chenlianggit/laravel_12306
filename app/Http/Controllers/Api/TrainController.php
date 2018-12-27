@@ -102,9 +102,21 @@ class TrainController
         $passengerList = json_decode($train->passengers, true);
         foreach ($passengerList as &$v){
             $v['idCard'] = ycIdCard($v['idCard']);
-            $v['ticketStateName'] = '未出票';
-            $v['packageName'] = '快速出票';
-            $v['packagePrice'] = 2.0;
+            $v['ticketStateName']   = '未出票';
+            $v['packageName']       = '快速出票';
+            $v['packagePrice']      = 2.0;
+            $v['passengerType']     = 1;
+            $v['passengerTypeName'] = '成人';
+            $v['ifPackage']         = ['isEnable'=>1,'isVisiable'=>1];
+            $v["seatNo"]            = "";
+            $v["ticketPrice"]       = "43.5";
+            $v["ticketState"]       = "1";
+            $v["ticketStateName"]   = "未出票";
+            $v["oldSerialId"]       = "";
+            $v["packageId"]         = "456";
+            $v["packageName"]       = "快速出票";
+            $v["packagePrice"]      = "2.0";
+            $v["insuranceId"]       = "121";
         }
         $seat = config('dict.seat');
 
