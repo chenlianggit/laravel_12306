@@ -1,33 +1,39 @@
 <?php
-/**
- * 订票-请求Python
- * User: chenliang
- * Date: 2018/12/26
- * Time: 下午11:43
- */
 
-namespace App\Console\Commands\Train;
+namespace App\Jobs;
 
 use App\Models\Train;
 use Curl\Curl;
-use Illuminate\Console\Command;
-class Create extends Command
-{
-    protected $signature = "train:create-python {--id=}";
+use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 
-    protected $description = "订票-请求Python";
+class TrainPython implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+
+    public $id;
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct($id)
+    {
+        $this->id = $id;
+    }
 
     /**
-     *
-     * Artisan::call('train:create-python',[ '--id' => $id ])
+     * Python 订票
      * @throws \ErrorException
      */
     public function handle()
     {
-        $id = (int)$this->option('id');
-
         $url = 'http://127.0.0.1:5000/order';
-        $train = Train::find($id);
+        $train = Train::find($this->id);
         $train->python_type = 1;
         $train->save();
 
@@ -44,6 +50,5 @@ class Create extends Command
         $curl->setHeader('Content-Type','application/x-www-form-urlencoded');
         $curl->post($url,$data);
         $curl->close();
-
     }
 }

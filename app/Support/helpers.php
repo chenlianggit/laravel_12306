@@ -132,3 +132,21 @@ function send_post( $url, $post_data ) {
 
     return $result;
 }
+
+/**
+ * 用来拼接文件名, 网址等路径
+ *
+ * @return string
+ */
+function join_paths()
+{
+    $args  = func_get_args();
+    $paths = [];
+    foreach ($args as $arg) {
+        $paths = array_merge($paths, (array)$arg);
+    }
+
+    $paths = array_map(create_function('$p', 'return trim($p, "/");'), $paths);
+    $paths = array_filter($paths);
+    return join('/', $paths);
+}

@@ -8,10 +8,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Jobs\TrainPython;
 use App\Models\Train;
 use App\Models\User12306;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Queue;
 
 class TrainController
 {
@@ -56,7 +58,7 @@ class TrainController
         $Obj->passengers    = json_encode($passengersList,JSON_UNESCAPED_UNICODE);
         $Obj->save();
         $id = $Obj->id;
-        Artisan::call('train:create-python',[ '--id' => $id ]);
+        Queue::push(new TrainPython($id));
         outputToJson(OK,'success',$id);
 
     }
