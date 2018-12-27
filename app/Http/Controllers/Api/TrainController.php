@@ -34,7 +34,7 @@ class TrainController
 //            outputToJson(ERROR,'购票时间接近开车时间,请重新选择');
             WxOutPut();
         }
-        $openid     = WxController::getOpenidBy3rdSession($sessionCode);
+        $openid     = WxController::getOpenidBy3rdSession($sessionCode,1);
         $User12306  = User12306::where('username',$accountNo)->first();
         if(!($User12306->pwd ?? '')){
 //            outputToJson(ERROR,'请重新登陆12306');
