@@ -31,20 +31,23 @@ class TrainController
             outputToJson(ERROR,'error');
         }
         if($ticketItem['trainDate'] < date('Y-m-d')){
-            outputToJson(ERROR,'购票时间接近开车时间,请重新选择');
+//            outputToJson(ERROR,'购票时间接近开车时间,请重新选择');
+            WxOutPut();
         }
         $openid     = WxController::getOpenidBy3rdSession($sessionCode);
         $User12306  = User12306::where('username',$accountNo)->first();
         if(!($User12306->pwd ?? '')){
-            outputToJson(ERROR,'请重新登陆12306');
+//            outputToJson(ERROR,'请重新登陆12306');
+            WxOutPut();
         }
         $res = Train::where(['openid'=>$openid,'username'=>$accountNo,'train_no'=>$ticketItem['trainNo'],'train_date'=>$ticketItem['trainDate'],'python_type'=>0])->first();
         if($res){
-            outputToJson(ERROR,'同一时间，同一辆车，不能多次创建');
+//            outputToJson(ERROR,'同一时间，同一辆车，不能多次创建');
+            WxOutPut();
         }
 
         #储存formId
-//        WxController::_saveOneFormid($openid, $formId);
+        WxController::_saveOneFormid($openid, $formId);
 
         $Obj = new Train();
         $Obj->openid        = $openid;
@@ -59,7 +62,17 @@ class TrainController
         $Obj->save();
         $id = $Obj->id;
         Queue::push(new TrainPython($id));
-        outputToJson(OK,'success',$id);
+        $data = [
+            "memberId"  => time().rand(10000,99999),
+            "orderId"   => $id,
+            "orderSerialId"=> $sessionCode,
+            "payExpireDate"=> date('Y-m-d H:i:s',time()+3600),
+            "serverTime"=> date('Y-m-d H:i:s'),
+            "totalAmount"=> "89.0",
+            "purchaseModel"=> "1"
+        ];
+        WxOutPut($data);
+//        outputToJson(OK,'success',$id);
 
     }
 }

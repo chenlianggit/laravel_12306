@@ -77,7 +77,7 @@ function _judgeValue($data, $type = "string", $value = "@place@")
 
 
 
-function WxOutPut($data){
+function WxOutPut($data = []){
     header("Content-type: application/json; charset=utf-8");
     $msg['response'] = [
         'header'=>[
@@ -97,7 +97,9 @@ function WxOutPut($data){
             'verifyReturn'      => false,
         ],
     ];
-    $msg['response']['body'] = array_merge($msg['response']['body'],$data);
+    if($data){
+        $msg['response']['body'] = array_merge($msg['response']['body'],$data);
+    }
 
     $msg = json_encode($msg);
 
