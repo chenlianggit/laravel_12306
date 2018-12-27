@@ -20,4 +20,5 @@ Route::namespace('Api')->group(function(){
     Route::any('12306/login', 'LoginController@login12306');
     Route::any('list/friends', 'LoginController@friends');
     Route::any('train/order/create', 'TrainController@create');
+    Route::any('train/order/detail', 'TrainController@detail');
 });

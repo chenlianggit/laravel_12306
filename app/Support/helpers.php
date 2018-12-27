@@ -184,3 +184,12 @@ function join_paths()
     $paths = array_filter($paths);
     return join('/', $paths);
 }
+
+//自定义函数隐藏中间数字
+function ycIdCard($str){
+    if(!$str){
+        return '';
+    }
+    $resstr = substr_replace($str,'****',3,12);
+    return $resstr;
+}
