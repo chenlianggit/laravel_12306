@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Api;
 use App\Jobs\TrainPython;
 use App\Models\Train;
 use App\Models\User12306;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Queue;
@@ -76,8 +77,8 @@ class TrainController
             "orderSerialId" => $id,
             "payExpireDate" => date('Y-m-d H:i:s',time()+3600),
             "serverTime"    => date('Y-m-d H:i:s'),
-            "totalAmount"   => "0",
-            "purchaseModel" => "1"
+            "totalAmount"   => 0,
+            "purchaseModel" => 1
         ];
         WxOutPutBody(0,'',$data);
     }
@@ -166,7 +167,7 @@ class TrainController
             "totalAmount"       => 89.0,
             "trainNo"           => $train->train_no,
             "isNight"           => 0,
-            "createTime"        => $train->created_at,
+            "createTime"        => Carbon ::parse($train->created_at)->format('Y-m-d H:i:s'),
             "isBuyOneyuanFree"  => 0,
             "oneyuanFreeCount"  => 0,
             "couponAmount"      => 0,
