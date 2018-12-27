@@ -39,7 +39,7 @@ class TrainController
         if($ticketItem['trainDate'] < date('Y-m-d')){
             WxOutPutBody(WXERROR,'购票时间接近开车时间,请重新选择');
         }
-        $openid     = WxController::getOpenidBy3rdSession($sessionCode,1);
+        $openid     = WxController::getOpenidBy3rdSession($sessionCode,'openid',1);
         $User12306  = User12306::where('username',$accountNo)->first();
         if(!($User12306->pwd ?? '')){
             WxOutPutBody(WXERROR,'请重新登陆12306');
@@ -94,7 +94,7 @@ class TrainController
             WxOutPutBody(WXERROR,'未查到该订单');
         }
 
-        $openid     = WxController::getOpenidBy3rdSession($sessionCode,1);
+        $openid     = WxController::getOpenidBy3rdSession($sessionCode,'openid',1);
         $train = Train::find($serialId);
         if(!$train || $train->openid != $openid){
             WxOutPutBody(WXERROR,'未查到该订单!');
